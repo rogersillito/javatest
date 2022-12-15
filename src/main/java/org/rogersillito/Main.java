@@ -2,21 +2,52 @@ package org.rogersillito;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class Main {
-    public static void main(String[] args) {
-//        TestLombokAllArgsConstructor();
-//        TestComparators();
-//        TestNestedClasses();
 
+    public static void main(String[] args) {
+//        testLombokAllArgsConstructor();
+//        testComparators();
+//        testNestedClasses();
+//        testInterfaceDefaults();
+        testStreams();
+    }
+
+    private static void testStreams() {
+        List<Integer> integerList = IntStream.rangeClosed(1, 10).boxed().toList();
+
+        int total = 0;
+        Du.mp("reduce", integerList.stream().reduce(total, (i1, i2) -> i1 + i2 + 1));
+
+        var oh = new ObjectHolder<>(0);
+        integerList.stream().parallel().forEach(el -> {
+            Du.mp(oh.get()+": ", el);
+            oh.set(oh.get() + 1);
+        });
+
+        Du.mp("anyMatch 3", integerList.stream().anyMatch(i -> {
+            Du.mp("anyMatch predicate", i);
+            return i == 3;
+        }));
+
+        Du.mp("filter % 3 = 0", integerList.stream().filter(i -> {
+            Du.mp("filter predicate", i);
+            return (i % 3) == 0;
+        }).toList());
+
+        Du.mp("map char", integerList.stream().map(Character::getName).toList());
+    }
+
+    private static void testInterfaceDefaults() {
         Du.mp("Kingdom = ", Animal.getKingdom());
         Cat cat = new Cat();
         cat.eat();
         ((Animal)cat).eat();
     }
 
-    private static void TestNestedClasses() {
+    private static void testNestedClasses() {
         var at = new NestedClassesTest();
         at.setMultiplier(1);
         at.doTestHarness();
@@ -24,12 +55,12 @@ public class Main {
         at.doTestHarness();
     }
 
-    private static void TestLombokAllArgsConstructor() {
+    private static void testLombokAllArgsConstructor() {
         Student student = new Student("Bob", Gender.MALE, Nationality.GERMANY, 35, new Student.Course("Spanish"), new Student.Course("Maths"), new Student.Course("History"), 190.5, 100.0);
         Du.mp("using lombok @AllArgsConstructor", student);
     }
 
-    private static void TestComparators() {
+    private static void testComparators() {
         List<Human> humans = getHumans();
 
         Comparator<Human> ageComparator = (h1, h2) -> h1.getAge() - h2.getAge();
