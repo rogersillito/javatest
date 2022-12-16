@@ -1,5 +1,7 @@
 package org.rogersillito;
 
+import org.rogersillito.medialib.DirWalker;
+
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -8,6 +10,11 @@ import java.util.stream.Stream;
 public class Main {
 
     public static void main(String[] args) {
+        try {
+            DirWalker.walk("C:\\DriveD\\_TEMP_GD\\Music Downloads");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 //        testLombokAllArgsConstructor();
 //        testComparators();
 //        testNestedClasses();
