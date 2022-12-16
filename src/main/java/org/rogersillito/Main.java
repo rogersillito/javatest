@@ -12,7 +12,7 @@ public class Main {
 //        testComparators();
 //        testNestedClasses();
 //        testInterfaceDefaults();
-        testStreams();
+//        testStreams();
     }
 
     private static void testStreams() {
@@ -23,7 +23,7 @@ public class Main {
 
         var oh = new ObjectHolder<>(0);
         integerList.stream().parallel().forEach(el -> {
-            Du.mp(oh.get()+": ", el);
+            Du.mp(oh.get() + ": ", el);
             oh.set(oh.get() + 1);
         });
 
@@ -38,13 +38,62 @@ public class Main {
         }).toList());
 
         Du.mp("map char", integerList.stream().map(Character::getName).toList());
+
+        List<Integer> someList = Arrays.asList(1, 2, 3);
+        //TODO: collect as mapping - fully understand intellisense on this...
+//        someList.stream().collect(Collectors.mapping(integer -> ))
     }
 
     private static void testInterfaceDefaults() {
-        Du.mp("Kingdom = ", Animal.getKingdom());
-        Cat cat = new Cat();
-        cat.eat();
-        ((Animal)cat).eat();
+        class SuperTester {
+            public static List<? super Cat> randomFilter(List<? super Cat> catSuperclassList) {
+                var catSuperclassInstance = catSuperclassList.stream().findAny();
+                if (catSuperclassInstance.isPresent()) {
+                    var e1 = catSuperclassInstance.get();
+                    //TODO: figure out how to break super!!
+                    Du.mp("filtering", e1);
+
+                    return List.of(e1);
+                }
+                return List.of();
+            }
+        }
+//        Cat cat = new Cat();
+//        cat.eat();
+//        Du.mp("Kingdom = ", cat.getKingdom());
+//        Du.mp("Phylum = ", cat.getPhylum());
+//        Du.mp("Family = ", cat.getFamily());
+//        ((Animal) cat).eat();
+//        cat.miaow();
+//
+        Human human = new Human("Phil", 20);
+//        human.eat();
+//        Du.mp("Kingdom = ", human.getKingdom());
+//        Du.mp("Phylum = ", human.getPhylum());
+//        Du.mp("Family = ", human.getFamily());
+//        human.eat();
+//        human.stand();
+
+        var filtered = SuperTester.randomFilter(List.of(human));
+//        Du.mp("filtered list with human", filtered);
+
+        // anonymous Hominidae implementation
+        var felidae = new Felidae() { };
+        var someAnimal = new Animal() { };
+        isSuperclass(human, felidae);
+        isSuperclass(someAnimal, felidae);
+
+
+        var filtered2 = SuperTester.randomFilter(List.of(felidae));
+//        Du.mp("filtered list with hominid", filtered2);
+    }
+
+    private static boolean isSuperclass(Object superClass, Object derivedClass) {
+        var sClass = superClass.getClass();
+        var dClass = derivedClass.getClass();
+        var isAssignableFrom = sClass.isAssignableFrom(dClass);
+        Du.mp(String.format("%s isSuperclass of %s", sClass, dClass), isAssignableFrom);
+        return isAssignableFrom;
     }
 
     private static void testNestedClasses() {

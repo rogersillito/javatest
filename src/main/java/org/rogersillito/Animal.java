@@ -1,7 +1,7 @@
 package org.rogersillito;
 
 public interface Animal {
-    static String getKingdom() {
+    default String getKingdom() {
         return getName() + "ia";
     }
 

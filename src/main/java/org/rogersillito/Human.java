@@ -6,7 +6,7 @@ import lombok.ToString;
 
 @AllArgsConstructor
 @ToString
-public class Human {
+public class Human implements Hominidae {
     @Getter
     private String name;
     @Getter
